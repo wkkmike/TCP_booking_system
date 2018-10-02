@@ -8,7 +8,7 @@ public class TCPSocketServer {
     private static String s_serverName = "Server";
     private static String s_TCPPrefix = "group15";
     private static TCPController controller;
-    private static int port = 8888;
+    private static int port = 56665;
 
     public static void main(String[] args) throws IOException {
 
@@ -16,8 +16,9 @@ public class TCPSocketServer {
         {
             s_serverName = args[0];
         }
-
         controller = new TCPController(port);
-
+        while (true){
+            controller.listenCommand();
+        }
     }
 }

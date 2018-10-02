@@ -9,7 +9,7 @@ import Server.Utli.*;
 public class TCPSocketClient
 {
     private static String s_serverHost = "localhost";
-    private static int s_serverPort = 8888;
+    private static int s_serverPort = 56665;
     private static String s_serverName = "MiddlewareServer";
     private static String s_rmiPrefix = "group15";
     private static  Socket socket = null;
@@ -41,6 +41,8 @@ public class TCPSocketClient
             System.exit(1);
         }
 
+        output.println("asdfs");
+        output.flush();
         client = new Client();
         try {
             client.start();

@@ -6,7 +6,7 @@ import java.io.*;
 import Server.Utli.*;
 
 public class TCPController {
-    private static int port = 8888;
+    private static int port = 56665;
     private static ServerSocket serverSocket = null;
     private static Socket socket = null;
     private PrintWriter output;
@@ -55,16 +55,6 @@ public class TCPController {
         } catch (IOException e) {
             System.out.println("Read failed");
             System.exit(-1);
-        }
-
-        try{
-            serverSocket = new ServerSocket(port);
-            socket = serverSocket.accept();
-            output = new PrintWriter(socket.getOutputStream(), true);
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        }
-        catch(IOException exception){
-            System.out.println("Error: " + exception);
         }
     }
 }
