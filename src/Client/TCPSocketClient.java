@@ -12,7 +12,7 @@ public class TCPSocketClient
     private static int s_serverPort = 56665;
     private static String s_serverName = "MiddlewareServer";
     private static String s_rmiPrefix = "group15";
-    private static  Socket socket = null;
+    private static Socket socket = null;
     private static PrintWriter output;
     private static BufferedReader input;
     private static Client client;
