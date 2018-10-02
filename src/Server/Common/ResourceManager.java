@@ -5,13 +5,11 @@
 
 package Server.Common;
 
-import Server.Interface.*;
-
 import java.util.*;
 import java.rmi.RemoteException;
 import java.io.*;
 
-public class ResourceManager implements IResourceManager
+public class ResourceManager
 {
 	protected String m_name = "";
 	protected RMHashMap m_data = new RMHashMap();

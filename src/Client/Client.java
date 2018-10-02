@@ -1,24 +1,15 @@
 package Client;
 
-import Server.Interface.*;
-
 import java.util.*;
 import java.io.*;
-import java.rmi.RemoteException;
-import java.rmi.ConnectException;
-import java.rmi.ServerException;
-import java.rmi.UnmarshalException;
 
-public abstract class Client
+
+public class Client
 {
-	IResourceManager m_resourceManager = null;
-
 	public Client()
 	{
 		super();
 	}
-
-	public abstract void connectServer();
 
 	public void start()
 	{
@@ -46,19 +37,7 @@ public abstract class Client
 			try {
 				arguments = parse(command);
 				Command cmd = Command.fromString((String)arguments.elementAt(0));
-				try {
-					execute(cmd, arguments);
-				}
-				catch (ConnectException e) {
-					connectServer();
-					execute(cmd, arguments);
-				}
-			}
-			catch (IllegalArgumentException|ServerException e) {
-				System.err.println((char)27 + "[31;1mCommand exception: " + (char)27 + "[0m" + e.getLocalizedMessage());
-			}
-			catch (ConnectException|UnmarshalException e) {
-				System.err.println((char)27 + "[31;1mCommand exception: " + (char)27 + "[0mConnection to server lost");
+				execute(cmd, arguments, command);
 			}
 			catch (Exception e) {
 				System.err.println((char)27 + "[31;1mCommand exception: " + (char)27 + "[0mUncaught exception");
@@ -67,7 +46,7 @@ public abstract class Client
 		}
 	}
 
-	public void execute(Command cmd, Vector<String> arguments) throws RemoteException, NumberFormatException
+	public void execute(Command cmd, Vector<String> arguments, String command) throws NumberFormatException
 	{
 		switch (cmd)
 		{
@@ -96,7 +75,7 @@ public abstract class Client
 				int flightSeats = toInt(arguments.elementAt(3));
 				int flightPrice = toInt(arguments.elementAt(4));
 
-				if (m_resourceManager.addFlight(id, flightNum, flightSeats, flightPrice)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Flight added");
 				} else {
 					System.out.println("Flight could not be added");
@@ -116,7 +95,7 @@ public abstract class Client
 				int numCars = toInt(arguments.elementAt(3));
 				int price = toInt(arguments.elementAt(4));
 
-				if (m_resourceManager.addCars(id, location, numCars, price)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Cars added");
 				} else {
 					System.out.println("Cars could not be added");
@@ -136,7 +115,7 @@ public abstract class Client
 				int numRooms = toInt(arguments.elementAt(3));
 				int price = toInt(arguments.elementAt(4));
 
-				if (m_resourceManager.addRooms(id, location, numRooms, price)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Rooms added");
 				} else {
 					System.out.println("Rooms could not be added");
@@ -149,7 +128,7 @@ public abstract class Client
 				System.out.println("Adding a new customer [xid=" + arguments.elementAt(1) + "]");
 
 				int id = toInt(arguments.elementAt(1));
-				int customer = m_resourceManager.newCustomer(id);
+				int customer = TCPSocketClient.intExecute(command);
 
 				System.out.println("Add customer ID: " + customer);
 				break;
@@ -163,7 +142,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int customerID = toInt(arguments.elementAt(2));
 
-				if (m_resourceManager.newCustomer(id, customerID)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Add customer ID: " + customerID);
 				} else {
 					System.out.println("Customer could not be added");
@@ -179,7 +158,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int flightNum = toInt(arguments.elementAt(2));
 
-				if (m_resourceManager.deleteFlight(id, flightNum)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Flight Deleted");
 				} else {
 					System.out.println("Flight could not be deleted");
@@ -195,7 +174,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				if (m_resourceManager.deleteCars(id, location)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Cars Deleted");
 				} else {
 					System.out.println("Cars could not be deleted");
@@ -211,7 +190,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				if (m_resourceManager.deleteRooms(id, location)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Rooms Deleted");
 				} else {
 					System.out.println("Rooms could not be deleted");
@@ -227,7 +206,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int customerID = toInt(arguments.elementAt(2));
 
-				if (m_resourceManager.deleteCustomer(id, customerID)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Customer Deleted");
 				} else {
 					System.out.println("Customer could not be deleted");
@@ -243,7 +222,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int flightNum = toInt(arguments.elementAt(2));
 
-				int seats = m_resourceManager.queryFlight(id, flightNum);
+				int seats = TCPSocketClient.intExecute(command);
 				System.out.println("Number of seats available: " + seats);
 				break;
 			}
@@ -256,7 +235,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				int numCars = m_resourceManager.queryCars(id, location);
+				int numCars = TCPSocketClient.intExecute(command);
 				System.out.println("Number of cars at this location: " + numCars);
 				break;
 			}
@@ -269,7 +248,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				int numRoom = m_resourceManager.queryRooms(id, location);
+				int numRoom = TCPSocketClient.intExecute(command);
 				System.out.println("Number of rooms at this location: " + numRoom);
 				break;
 			}
@@ -282,7 +261,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int customerID = toInt(arguments.elementAt(2));
 
-				String bill = m_resourceManager.queryCustomerInfo(id, customerID);
+				String bill = TCPSocketClient.stringExecute(command);
 				System.out.print(bill);
 				break;               
 			}
@@ -295,7 +274,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				int flightNum = toInt(arguments.elementAt(2));
 
-				int price = m_resourceManager.queryFlightPrice(id, flightNum);
+				int price = TCPSocketClient.intExecute(command);
 				System.out.println("Price of a seat: " + price);
 				break;
 			}
@@ -308,7 +287,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				int price = m_resourceManager.queryCarsPrice(id, location);
+				int price = TCPSocketClient.intExecute(command);
 				System.out.println("Price of cars at this location: " + price);
 				break;
 			}
@@ -321,7 +300,7 @@ public abstract class Client
 				int id = toInt(arguments.elementAt(1));
 				String location = arguments.elementAt(2);
 
-				int price = m_resourceManager.queryRoomsPrice(id, location);
+				int price = TCPSocketClient.intExecute(command);
 				System.out.println("Price of rooms at this location: " + price);
 				break;
 			}
@@ -336,7 +315,7 @@ public abstract class Client
 				int customerID = toInt(arguments.elementAt(2));
 				int flightNum = toInt(arguments.elementAt(3));
 
-				if (m_resourceManager.reserveFlight(id, customerID, flightNum)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Flight Reserved");
 				} else {
 					System.out.println("Flight could not be reserved");
@@ -354,7 +333,7 @@ public abstract class Client
 				int customerID = toInt(arguments.elementAt(2));
 				String location = arguments.elementAt(3);
 
-				if (m_resourceManager.reserveCar(id, customerID, location)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Car Reserved");
 				} else {
 					System.out.println("Car could not be reserved");
@@ -372,7 +351,7 @@ public abstract class Client
 				int customerID = toInt(arguments.elementAt(2));
 				String location = arguments.elementAt(3);
 
-				if (m_resourceManager.reserveRoom(id, customerID, location)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Room Reserved");
 				} else {
 					System.out.println("Room could not be reserved");
@@ -406,7 +385,7 @@ public abstract class Client
 				boolean car = toBoolean(arguments.elementAt(arguments.size()-2));
 				boolean room = toBoolean(arguments.elementAt(arguments.size()-1));
 
-				if (m_resourceManager.bundle(id, customerID, flightNumbers, location, car, room)) {
+				if (TCPSocketClient.booleanExecute(command)) {
 					System.out.println("Bundle Reserved");
 				} else {
 					System.out.println("Bundle could not be reserved");

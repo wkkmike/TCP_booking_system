@@ -3,6 +3,8 @@ package Client;
 import java.io.*;
 import java.net.*;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import Server.Utli.*;
 
 public class TCPSocketClient
 {
@@ -10,7 +12,10 @@ public class TCPSocketClient
     private static int s_serverPort = 8888;
     private static String s_serverName = "MiddlewareServer";
     private static String s_rmiPrefix = "group15";
-    private Socket socket = null;
+    private static  Socket socket = null;
+    private static PrintWriter output;
+    private static BufferedReader input;
+    private static Client client;
 
     public static void main(String args[]) {
         // get customerized hostip and host port
@@ -31,15 +36,29 @@ public class TCPSocketClient
             System.exit(1);
         }
 
+        if(!connect(s_serverHost, s_serverPort)){
+            System.out.println("Connect Fail to Host: '" + s_serverHost + "' port: '" + s_serverPort + ".");
+            System.exit(1);
+        }
 
+        client = new Client();
+        try {
+            client.start();
+        }
+        catch (Exception e){
+            System.err.println((char)27 + "[31;1mClient exception: " + (char)27 + "[0mUncaught exception");
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
-    public boolean connect(String ip, int port){
+
+    public static boolean connect(String ip, int port){
         try{
             socket = new Socket(ip, port);
-            out = new PrintWriter(socket.getOutputStream(),
+            output = new PrintWriter(socket.getOutputStream(),
                     true);
-            in = new BufferedReader(new InputStreamReader(
+            input = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
         } catch (UnknownHostException e) {
             System.out.println("Unknown host");
@@ -53,7 +72,36 @@ public class TCPSocketClient
         return true;
     }
 
-    public void connectServer(){
-
+    public static String execute(String command){
+        output.print(command);
+        output.flush();
+        String returnValue = "";
+        try{
+            returnValue = input.readLine();
+        }
+        catch(IOException e){
+            System.out.println("input fail");
+        }
+        return returnValue;
     }
+
+    public static int intExecute(String command){
+        return Integer.parseInt(execute(command));
+    }
+
+    public static boolean booleanExecute(String command){
+        String returnValue = execute(command);
+        if(returnValue == "True"){
+            return true;
+        }
+        else return false;
+    }
+
+    public static String stringExecute(String command){
+        return execute(command);
+    }
+    public static void connectServer(){
+        connect(s_serverHost, s_serverPort);
+    }
+
 }
