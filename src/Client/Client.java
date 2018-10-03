@@ -2,6 +2,7 @@ package Client;
 
 import java.util.*;
 import java.io.*;
+import Client.TCPSocketClient;
 
 
 public class Client
@@ -21,6 +22,7 @@ public class Client
 
 		while (true)
 		{
+			TCPSocketClient.connect();
 			// Read the next command
 			String command = "";
 			Vector<String> arguments = new Vector<String>();

@@ -41,8 +41,6 @@ public class TCPSocketClient
             System.exit(1);
         }
 
-        output.println("asdfs");
-        output.flush();
         client = new Client();
         try {
             client.start();
@@ -52,8 +50,12 @@ public class TCPSocketClient
             e.printStackTrace();
             System.exit(1);
         }
+
     }
 
+    public static void connect(){
+        connect(s_serverHost, s_serverPort);
+    }
 
     public static boolean connect(String ip, int port){
         try{
@@ -75,7 +77,17 @@ public class TCPSocketClient
     }
 
     public static String execute(String command){
-        output.print(command);
+        try{
+            output = new PrintWriter(socket.getOutputStream(),
+                    true);
+            input = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+        }
+        catch (IOException e){
+            System.out.println("IO exception during execute time.");
+            System.exit(-1);
+        }
+        output.println(command);
         output.flush();
         String returnValue = "";
         try{
@@ -93,10 +105,10 @@ public class TCPSocketClient
 
     public static boolean booleanExecute(String command){
         String returnValue = execute(command);
-        if(returnValue == "True"){
+        if(returnValue.equals("true")){
             return true;
         }
-        else return false;
+        return false;
     }
 
     public static String stringExecute(String command){
