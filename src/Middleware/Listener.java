@@ -1,5 +1,9 @@
-package Server.TCP;
+package Middleware;
 
+import Server.Common.Parser;
+import Server.Utli.Command;
+import Server.Utli.Executer;
+import
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,20 +12,13 @@ import java.net.Socket;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import Server.Common.*;
-import Server.Utli.Command;
-import Server.Utli.Executer;
-
-
-public class Listener implements Runnable{
+public class Listener {
     Socket socket = null;
-    ResourceManager resourceManager = null;
     BufferedReader input = null;
     PrintWriter output = null;
 
-    public Listener(Socket socket, ResourceManager resourceManager){
+    public Listener(Socket socket){
         this.socket = socket;
-        this.resourceManager = resourceManager;
         try{
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(socket.getOutputStream(),
@@ -70,7 +67,6 @@ public class Listener implements Runnable{
         }
     }
 
-    // Block lambda to parse command
     Parser parser = (command) -> {
         Vector<String> arguments = new Vector<String>();
         StringTokenizer tokenizer = new StringTokenizer(command,",");

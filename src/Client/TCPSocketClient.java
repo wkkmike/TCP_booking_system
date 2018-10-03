@@ -10,8 +10,6 @@ public class TCPSocketClient
 {
     private static String s_serverHost = "localhost";
     private static int s_serverPort = 56665;
-    private static String s_serverName = "MiddlewareServer";
-    private static String s_rmiPrefix = "group15";
     private static Socket socket = null;
     private static PrintWriter output;
     private static BufferedReader input;
@@ -24,14 +22,10 @@ public class TCPSocketClient
         }
 
         if(args.length > 1){
-            s_serverName = args[1];
+            s_serverPort = Integer.parseInt(args[1]);
         }
 
-        if(args.length > 2){
-            s_serverPort = Integer.parseInt(args[2]);
-        }
-
-        if (args.length > 3) {
+        if (args.length > 2) {
             System.err.println((char) 27 + "[31;1mClient exception: " + (char) 27 + "[0mUsage: java client.RMIClient [server_hostname [server_rmiobject]]");
             System.exit(1);
         }
@@ -95,6 +89,13 @@ public class TCPSocketClient
         }
         catch(IOException e){
             System.out.println("input fail");
+        }
+        try{
+            socket.close();
+        }
+        catch (IOException e){
+            System.out.println("Socket close failed.");
+            System.exit(-1);
         }
         return returnValue;
     }
