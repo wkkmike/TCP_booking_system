@@ -1,5 +1,6 @@
 package Middleware;
 
+import Server.TCP.TCPController;
 import Server.Utli.Command;
 
 import java.util.Vector;
@@ -84,15 +85,38 @@ public class Executer {
                 String room = arguments.elementAt(arguments.size()-1);
 
                 for(String flightNumber: flightNumbers){
-                    return TCPMiddleware.flightExecute(makeReserveFlightCmd.buildCMD(id,customerID,flightNumber));
+                    if(Integer.parseInt(TCPMiddleware.flightExecute(makeQueryFlightCmd.
+                            buildCMD(id, customerID, flightNumber))) <= 0)
+                        return "false";
                 }
                 if(toBoolean(car)){
-                    return TCPMiddleware.carExecute(makeReserveCarCmd.buildCMD(id, customerID,location));
+                    if(Integer.parseInt(TCPMiddleware.carExecute(makeQueryCarCmd.
+                            buildCMD(id, customerID, location))) <= 0)
+                        return "false";
                 }
                 if(toBoolean(room)){
-                    return TCPMiddleware.roomExecute(makeReserveRoomCmd.buildCMD(id, customerID,location));
+                    if(Integer.parseInt(TCPMiddleware.roomExecute(makeQueryRoomCmd.
+                            buildCMD(id, customerID, location))) <= 0)
+                        return "false";
                 }
-                return "False";
+                Boolean flag = true;
+                for(String flightNumber: flightNumbers){
+                    if(!toBoolean(TCPMiddleware.flightExecute(makeReserveFlightCmd.
+                            buildCMD(id,customerID,flightNumber))))
+                        flag = false;
+                }
+                if(toBoolean(car)){
+                    if(!toBoolean(TCPMiddleware.carExecute(makeReserveCarCmd.
+                            buildCMD(id, customerID,location))))
+                        flag = false;
+                }
+                if(toBoolean(room)){
+                    if(!toBoolean(TCPMiddleware.roomExecute(makeReserveRoomCmd.
+                            buildCMD(id, customerID,location))))
+                        flag = false;
+                }
+                if(flag) return "true";
+                return "false";
             }
         }
         return "unknow cmd";
@@ -101,6 +125,9 @@ public class Executer {
     static CmdBuilder makeReserveFlightCmd = (id,customerID,flightNumber) -> "ReserveFlight,"+id+","+customerID+","+flightNumber;
     static CmdBuilder makeReserveCarCmd = (id,customerID,location) -> "ReserveCar,"+id+","+customerID+","+location;
     static CmdBuilder makeReserveRoomCmd = (id,customerID,location) -> "ReserveRoom,"+id+","+customerID+","+location;
+    static CmdBuilder makeQueryFlightCmd = (id,customerID,flightNumber) -> "QueryFlight,"+id+","+flightNumber;
+    static CmdBuilder makeQueryCarCmd = (id,customer,location) -> "QueryCar,"+id+","+location;
+    static CmdBuilder makeQueryRoomCmd = (id,customer,location) -> "QueryRoom,"+id+","+location;
 
 }
 

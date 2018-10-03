@@ -8,7 +8,7 @@ import Server.Utli.*;
 
 public class TCPSocketClient
 {
-    private static String s_serverHost = "localhost";
+    private static String s_serverHost = "cs-28.cs.mcgill.ca";
     private static int s_serverPort = 56666;
     private static Socket socket = null;
     private static PrintWriter output;

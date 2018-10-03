@@ -8,19 +8,19 @@ public class TCPMiddleware {
     private static String s_rmiPrefix = "group15";
     private static int port = 56666;
 
-    private static String s_serverHost_Flight = "localhost";
+    private static String s_serverHost_Flight = "cs-29.cs.mcgill.ca";
     private static int s_serverPort_Flight = 56665;
     private static String s_serverName_Flight = "Flights";
 
-    private static String s_serverHost_Car = "localhost";
+    private static String s_serverHost_Car = "cs-30.cs.mcgill.ca";
     private static int s_serverPort_Car = 56665;
     private static String s_serverName_Car = "Cars";
 
-    private static String s_serverHost_Room = "localhost";
+    private static String s_serverHost_Room = "cs-31.cs.mcgill.ca";
     private static int s_serverPort_Room = 56665;
     private static String s_serverName_Room = "Rooms";
 
-    private static String s_serverHost_Customer = "localhost";
+    private static String s_serverHost_Customer = "cs-32.cs.mcgill.ca";
     private static int s_serverPort_Customer = 56665;
     private static String s_serverName_Customer = "Customers";
 
