@@ -2,7 +2,7 @@ package Middleware;
 
 import Server.Common.Parser;
 import Server.Utli.Command;
-import Middleware.*;
+import Middleware.Executer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,17 +46,13 @@ public class Listener implements Runnable{
             System.exit(-1);
         }
 
-        try {
-            Vector<String> arguments = parser.parse(command);
-            Command cmd = Command.fromString((String)arguments.elementAt(0));
-            String result = Executer.execute(cmd, arguments,command);
-            output.println(result);
-            output.flush();
-        }
-        catch (IOException e){
-            System.out.println("IO wrong for buffered reader.");
-            System.exit(-1);
-        }
+
+        Vector<String> arguments = parser.parse(command);
+        Command cmd = Command.fromString((String)arguments.elementAt(0));
+        String result = Executer.execute(cmd, arguments,command);
+        output.println(result);
+        output.flush();
+
         try{
             socket.close();
         }

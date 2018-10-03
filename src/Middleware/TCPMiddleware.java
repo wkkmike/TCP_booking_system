@@ -6,7 +6,7 @@ import java.io.*;
 public class TCPMiddleware {
     private static String s_serverName = "MiddlewareServer";
     private static String s_rmiPrefix = "group15";
-    private static int port = 566665;
+    private static int port = 56666;
 
     private static String s_serverHost_Flight = "localhost";
     private static int s_serverPort_Flight = 56665;
