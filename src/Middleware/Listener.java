@@ -2,8 +2,7 @@ package Middleware;
 
 import Server.Common.Parser;
 import Server.Utli.Command;
-import Server.Utli.Executer;
-import
+import Middlerware.Utli.Executer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,7 +11,7 @@ import java.net.Socket;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-public class Listener {
+public class Listener implements Runnable{
     Socket socket = null;
     BufferedReader input = null;
     PrintWriter output = null;
@@ -50,7 +49,7 @@ public class Listener {
         try {
             Vector<String> arguments = parser.parse(command);
             Command cmd = Command.fromString((String)arguments.elementAt(0));
-            String result = Executer.execute(cmd, arguments, resourceManager);
+            String result = Executer.execute(cmd, arguments);
             output.println(result);
             output.flush();
         }

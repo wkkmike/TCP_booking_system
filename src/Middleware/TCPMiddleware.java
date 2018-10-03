@@ -1,9 +1,7 @@
 package Middleware;
 import java.net.*;
 import java.io.*;
-import Server.TCP.TCPController;
-import Server.TCP.Listener;
-import Server.TCP.TCPController;
+
 
 public class TCPMiddleware {
     private static String s_serverName = "MiddlewareServer";
@@ -26,7 +24,7 @@ public class TCPMiddleware {
     private static int s_serverPort_Customer = 56665;
     private static String s_serverName_Customer = "Customers";
 
-    private static TCPController controller;
+    private static Server.TCP.TCPController controller;
 
     public static void main(String[] args) throws IOException {
 
@@ -75,7 +73,7 @@ public class TCPMiddleware {
             s_serverPort_Customer = Integer.parseInt(args[8]);
         }
 
-        controller = new TCPController(port);
+        controller = new Server.TCP.TCPController(port);
 
         while (true){
             Socket socket = controller.acceptNewSocket();
@@ -89,23 +87,74 @@ public class TCPMiddleware {
         }
     }
 
-    public static boolean connect(String ip, int port){
+    public static Socket connect(String ip, int port){
+        Socket socket = null;
         try{
             socket = new Socket(ip, port);
-            output = new PrintWriter(socket.getOutputStream(),
+            PrintWriter output = new PrintWriter(socket.getOutputStream(),
                     true);
-            input = new BufferedReader(new InputStreamReader(
+            BufferedReader input = new BufferedReader(new InputStreamReader(
                     socket.getInputStream()));
         } catch (UnknownHostException e) {
             System.out.println("Unknown host");
             System.exit(1);
-            return false;
         } catch  (IOException e) {
             System.out.println("No I/O");
             System.exit(1);
-            return false;
         }
-        return true;
+        return socket;
+    }
+
+    public static String execute(String command, Socket socket){
+        PrintWriter output = null;
+        BufferedReader input = null;
+        try{
+            output = new PrintWriter(socket.getOutputStream(),
+                    true);
+            input = new BufferedReader(new InputStreamReader(
+                    socket.getInputStream()));
+        }
+        catch (IOException e){
+            System.out.println("IO exception during execute time.");
+            System.exit(-1);
+        }
+        output.println(command);
+        output.flush();
+        String returnValue = "";
+        try{
+            returnValue = input.readLine();
+        }
+        catch(IOException e){
+            System.out.println("input fail");
+        }
+        try{
+            socket.close();
+        }
+        catch (IOException e){
+            System.out.println("Socket close failed.");
+            System.exit(-1);
+        }
+        return returnValue;
+    }
+
+    public static String flightExecute(String command){
+        Socket socket = connect(s_serverHost_Flight,s_serverPort_Flight);
+        return execute(command, socket);
+    }
+
+    public static String carExecute(String command){
+        Socket socket = connect(s_serverHost_Car, s_serverPort_Car);
+        return execute(command, socket);
+    }
+
+    public static String roomExecute(String command){
+        Socket socket = connect(s_serverHost_Room, s_serverPort_Room);
+        return execute(command, socket);
+    }
+
+    public static String customerExecute(String command){
+        Socket socket = connect(s_serverHost_Customer, s_serverPort_Customer);
+        return execute(command, socket);
     }
 
 }
