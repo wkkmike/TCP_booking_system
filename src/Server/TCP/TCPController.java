@@ -36,35 +36,4 @@ public class TCPController{
         }
         return socket;
     }
-    /***
-    public TCPController(){
-        new TCPController(8888);
-    }
-
-    public TCPController(int port){
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            System.out.println("Could not listen on port " + port);
-            System.exit(-1);
-        }
-
-        try{
-            socket = serverSocket.accept();
-        } catch (IOException e) {
-            System.out.println("Accept failed: 4321");
-            System.exit(-1);
-        }
-
-        try{
-            input = new BufferedReader(new InputStreamReader(
-                    socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(),
-                    true);
-        } catch (IOException e) {
-            System.out.println("Read failed");
-            System.exit(-1);
-        }
-    }
-    ***/
 }

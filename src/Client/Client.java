@@ -37,7 +37,7 @@ public class Client
 			}
 
 			try {
-				arguments = parse(command);
+				arguments = parser.parse(command);
 				Command cmd = Command.fromString((String)arguments.elementAt(0));
 				execute(cmd, arguments, command);
 			}
@@ -402,8 +402,8 @@ public class Client
 		}
 	}
 
-	public static Vector<String> parse(String command)
-	{
+	// Block lambda to parse command
+	Parser parser = (command) -> {
 		Vector<String> arguments = new Vector<String>();
 		StringTokenizer tokenizer = new StringTokenizer(command,",");
 		String argument = "";
@@ -414,7 +414,7 @@ public class Client
 			arguments.add(argument);
 		}
 		return arguments;
-	}
+	};
 
 	public static void checkArgumentsCount(Integer expected, Integer actual) throws IllegalArgumentException
 	{

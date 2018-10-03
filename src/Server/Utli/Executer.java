@@ -286,20 +286,6 @@ public class Executer {
         return "unknow cmd";
     }
 
-    public static Vector<String> parse(String command)
-    {
-        Vector<String> arguments = new Vector<String>();
-        StringTokenizer tokenizer = new StringTokenizer(command,",");
-        String argument = "";
-        while (tokenizer.hasMoreTokens())
-        {
-            argument = tokenizer.nextToken();
-            argument = argument.trim();
-            arguments.add(argument);
-        }
-        return arguments;
-    }
-
     public static void checkArgumentsCount(Integer expected, Integer actual) throws IllegalArgumentException
     {
         if (expected != actual)

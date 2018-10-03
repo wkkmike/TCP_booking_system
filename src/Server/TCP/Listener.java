@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
+import Server.Common.*;
 import Server.Utli.Command;
 import Server.Utli.Executer;
-import Server.Common.ResourceManager;
 
 
 public class Listener implements Runnable{
@@ -50,7 +51,7 @@ public class Listener implements Runnable{
         }
 
         try {
-            Vector<String> arguments = Executer.parse(command);
+            Vector<String> arguments = parser.parse(command);
             Command cmd = Command.fromString((String)arguments.elementAt(0));
             String result = Executer.execute(cmd, arguments, resourceManager);
             output.println(result);
@@ -61,4 +62,18 @@ public class Listener implements Runnable{
             System.exit(-1);
         }
     }
+
+    // Block lambda to parse command
+    Parser parser = (command) -> {
+        Vector<String> arguments = new Vector<String>();
+        StringTokenizer tokenizer = new StringTokenizer(command,",");
+        String argument = "";
+        while (tokenizer.hasMoreTokens())
+        {
+            argument = tokenizer.nextToken();
+            argument = argument.trim();
+            arguments.add(argument);
+        }
+        return arguments;
+    };
 }
